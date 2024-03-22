@@ -3,13 +3,9 @@ module.exports = {
   content: [
     "./src/**/*.{js,jsx,ts,tsx}",
   ],
-  theme: {
-    extend: {
-      colors: {
-        crimson: '#DC143C',
-      },
-    },
-  },
-  plugins: [],
+  theme: {},
+  plugins: [
+    require('flowbite/plugin')
+]
 }
 
