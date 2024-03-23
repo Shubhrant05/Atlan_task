@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Dashboard from './pages/dashboard';
 import HallOfFame from './pages/halloffame';
+import ModelDetails from './pages/ModelDetails';
 
 const App = () => {
  
@@ -11,6 +12,7 @@ const App = () => {
         <Routes>
           <Route path="/" element={<Dashboard />} />
           <Route path="/hall-of-fame" element={<HallOfFame />} />
+          <Route path="/model/:id" element={<ModelDetails />} />
         </Routes>
       </Router>
     </div>

@@ -93,7 +93,7 @@ const Dashboard = () => {
                         Filter
                     </button>
                     {isDropdownOpen && (
-                        <div className="absolute bg-gray-800 text-gray-400 rounded-lg py-2 mt-1 w-48">
+                        <div className="absolute bg-gray-800 text-gray-400 rounded-lg py-2 mt-4 w-48">
                             {uniqueCategories.map(category => (
                                 <label key={category} className="block px-4">
                                     <input
