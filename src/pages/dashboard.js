@@ -106,7 +106,7 @@ const Dashboard = () => {
                         </>
                     )}
                     {/* Dropdown for filter options on small screens */}
-                    {isDropdownOpen && isSmallScreen && (
+                    {isDropdownOpen  && (
                         <div className="absolute bg-gray-800 text-gray-400 rounded-lg py-2 mt-4 w-48 z-50">
                             {uniqueCategories.map(category => (
                                 <label key={category} className="block px-4">
