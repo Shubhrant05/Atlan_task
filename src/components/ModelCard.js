@@ -24,7 +24,7 @@ const ModelCard = ({ model }) => {
   };
 
   return (
-    <div className="bg-gray-800 text-red-500 rounded-lg shadow-lg overflow-hidden">
+    <div className="bg-gray-800 text-red-500 rounded-lg shadow-lg overflow-hidden transition transform hover:scale-105 duration-300">
       <div className="px-6 py-8">
         <h2 className="text-2xl font-bold mb-2 text-center">{model.name}</h2>
         <p className="text-gray-400 mb-4">{model.description}</p>
@@ -38,7 +38,9 @@ const ModelCard = ({ model }) => {
             <div className='flex justify-between '>
               <button className="text-red-500 bg-gray-700 p-3 rounded-md focus:outline-none" onClick={toggleModal}>Snippet</button>
 
-              <button className="text-red-500 bg-gray-700 p-3 rounded-md focus:outline-none ml-3" onClick={() => { navigate(`/model/${model.id}`) }}>More Details</button>
+              <button className="text-red-500 bg-gray-700 p-3 rounded-md focus:outline-none ml-3" onClick={() => {
+                navigate(`/model/${model._id}`)
+              }}>More Details</button>
             </div>
           </div>
           {isModalOpen && (

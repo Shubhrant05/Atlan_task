@@ -1,37 +1,27 @@
 import React from 'react';
-import { FiAward } from 'react-icons/fi'; // Import necessary icons
+import { FaStar } from 'react-icons/fa'; // Import star icon from React Icons
+import { useNavigate } from 'react-router-dom';
 
 const HallOfFame = () => {
-  // Assuming you have an array of top 5 models with their details
-  const topModels = [
-    { name: 'Model 1', likes: 100 },
-    { name: 'Model 2', likes: 90 },
-    { name: 'Model 3', likes: 80 },
-    { name: 'Model 4', likes: 70 },
-    { name: 'Model 5', likes: 60 },
-  ];
-
-  return (
-    <div className="bg-gray-900 min-h-screen text-red-500 p-8">
-      <h1 className="text-3xl font-bold mb-4">Hall of Fame</h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {topModels.map((model, index) => (
-          <div key={index} className="bg-gray-800 rounded-lg p-6 flex flex-col justify-between">
-            <div>
-              <div className="text-2xl font-semibold mb-4">{model.name}</div>
-              <div className="flex items-center">
-                <FiAward className="mr-2" />
-                <span className="text-yellow-400">{model.likes}</span>
-              </div>
+    // Retrieve the top 5 models from session storage
+    const hallOfFameModels = JSON.parse(sessionStorage.getItem('hallOfFameModels')) || [];
+    const navigate = useNavigate();
+    return (
+        <div className="container mx-auto px-4 py-8" >
+            <h1 className="text-3xl font-bold mb-6">Hall of Fame</h1>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-6">
+                {hallOfFameModels.map((model, index) => (
+                    <div key={model.id} className="bg-gray-800 p-6 rounded-lg flex items-center justify-center transition transform hover:scale-105 duration-300" onClick={() => {navigate(`/model/${model.id}`)}}>
+                        <div className="text-center">
+                            <FaStar className="text-yellow-500 text-4xl mb-2" />
+                      <h2 className="text-lg font-semibold mb-2">{model.name}</h2>
+                            <p className="text-gray-400">{model.description}</p>
+                        </div>
+                    </div>
+                ))}
             </div>
-            <div className="mt-4">
-              {/* You can add more details about the model here */}
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
+        </div>
+    );
 };
 
 export default HallOfFame;

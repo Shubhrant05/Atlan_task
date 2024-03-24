@@ -1,15 +1,28 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import { useParams } from 'react-router-dom';
 import { FaThumbsUp, FaCopy } from 'react-icons/fa';
-import { data } from '../../src/components/data';
+import axios from 'axios';
+// import { data } from '../../src/components/data';
+
 
 const ModelDetailsPage = () => {
-  // Get the model ID from the URL params
-  const { id } = useParams();
-  
-  // Find the model data based on the ID
-  const model = data.models.find(model => model.id === parseInt(id));
+  const [data, setData] = useState([])
 
+const getData = async () => {
+  try {
+      const res = await axios.get("http://localhost:4000/api/models")
+      setData(res.data.data)
+  } catch (error) {
+      console.log(error)
+  }
+}
+useEffect(() => {
+  getData()
+}, [])
+  // Get the model ID from the URL params
+  const query = useParams();
+
+    const model = data.find(model => model._id === query.id);
   if (!model) {
     return <div>Model not found</div>;
   }

@@ -11,7 +11,7 @@ const App = () => {
       <Router>
         <Routes>
           <Route path="/" element={<Dashboard />} />
-          <Route path="/hall-of-fame" element={<HallOfFame />} />
+          <Route path="/hallOfFame" element={<HallOfFame />} />
           <Route path="/model/:id" element={<ModelDetails />} />
         </Routes>
       </Router>

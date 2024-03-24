@@ -84,7 +84,7 @@ export const data = {
       "description": "DistilBERT is a distilled version of the BERT model developed by Hugging Face. It aims to reduce the memory footprint and computational cost of the original BERT model while retaining most of its performance. DistilBERT achieves this by using a smaller architecture and applying knowledge distillation during training. Despite its reduced size, DistilBERT maintains competitive performance on various natural language processing tasks, including text classification, language understanding, and more.",
       "provider": "Hugging Face",
       "providerInfo": "Hugging Face, founded in 2016 by Clément Delangue, Sam Shleifer, and Julien Chaumond, is a leading provider of state-of-the-art natural language processing models and tools. Hugging Face focuses on democratizing AI and making it accessible to developers and researchers worldwide. With a vibrant community and a commitment to open-source collaboration, Hugging Face has revolutionized the landscape of NLP.",
-      "likes": 110,
+      "likes": 310,
       "codeSnippet": "from transformers import DistilBertTokenizer, DistilBertForQuestionAnswering\n\ntokenizer = DistilBertTokenizer.from_pretrained('distilbert-base-uncased')\nmodel = DistilBertForQuestionAnswering.from_pretrained('distilbert-base-uncased')\n\nquestion = 'What is the capital of France?'\ncontext = 'Paris is the capital of France.'\n\ninputs = tokenizer.encode_plus(question, context, return_tensors='pt', max_length=512, truncation_strategy='only_second')\n\noutputs = model(**inputs)\nstart_scores, end_scores = outputs.start_logits, outputs.end_logits\nprint(start_scores, end_scores)",
       "useCases": ["Text Classification", "Language Understanding"]
     },
