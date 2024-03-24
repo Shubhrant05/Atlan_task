@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import ModelList from '../components/ModelList';
-import AddModelForm from '../components/AddModelForm';
-// import { data } from '../../src/components/data';
-import { FiFilter, FiAward } from 'react-icons/fi';
+import { FiFilter, FiAward } from 'react-icons/fi'; // Import FiAward for Hall of Fame button
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
@@ -11,36 +9,30 @@ const Dashboard = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedCategories, setSelectedCategories] = useState([]);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-    const [isAddModelOpen, setIsAddModelOpen] = useState(false);
     const [data, setData] = useState([]);
+    const [isSmallScreen, setIsSmallScreen] = useState(false); // State to track small screen size
     const navigate = useNavigate();
-    // Extract unique category values from the data
 
+    // Fetch data from API
     const getData = async () => {
         try {
-            const res = await axios.get("http://localhost:4000/api/models")
+            const res = await axios.get("https://atlan-backend-1.onrender.com/api/models")
             setData(res.data.data)
         } catch (error) {
             console.log(error)
         }
     }
+
     useEffect(() => {
         getData()
     }, [])
 
     useEffect(() => {
-
-        // Filter models based on search term
+        // Filter models based on search term and selected categories
         let filteredModels = data.filter(model =>
-            model.name.toLowerCase().includes(searchTerm.toLowerCase())
+            model.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
+            (selectedCategories.length === 0 || selectedCategories.includes(model.category))
         );
-
-        // Filter models based on selected categories
-        if (selectedCategories.length > 0) {
-            filteredModels = filteredModels.filter(model =>
-                selectedCategories.includes(model.category)
-            );
-        }
 
         setModels(filteredModels);
     }, [searchTerm, selectedCategories, data]);
@@ -61,52 +53,61 @@ const Dashboard = () => {
     };
 
     const handleHallOfFame = () => {
-        navigate('/halloffame')
+        navigate('/halloffame');
     };
 
     const toggleDropdown = () => {
-        setIsDropdownOpen(!isDropdownOpen);
+        setIsDropdownOpen(() => !isDropdownOpen);
     };
 
-    const toggleAddModel = () => {
-        setIsAddModelOpen(!isAddModelOpen);
+    // Function to toggle small screen state
+    const handleResize = () => {
+        setIsSmallScreen(window.innerWidth <= 640); // Adjust threshold as needed
     };
 
-    const handleAddModel = formData => {
-        const newModel = { ...formData, likes: 0 };
-        setModels([...models, newModel]);
-        toggleAddModel(); // Close the form after submission
-    };
+    // Event listener for window resize
+    useEffect(() => {
+        window.addEventListener('resize', handleResize);
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []);
 
     return (
-        <div className="bg-gray-900 min-h-screen text-red-500 p-8">
+        <div className="bg-gray-900 min-h-screen text-red-500 sm:p-8 md:p-4">
             <h1 className="text-3xl font-bold mb-4">Large Language Models</h1>
-            <div className="mb-4 flex items-center justify-between">
-                <div className="flex items-center">
-                    <input
-                        type="text"
-                        placeholder="Search by title"
-                        className="bg-gray-800 text-gray-400 rounded-l-lg px-4 py-2 focus:outline-none"
-                        value={searchTerm}
-                        onChange={handleSearch}
-                    />
-                </div>
-                <div className="flex items-center space-x-4 relative">
-                    <button
-                        className="bg-gray-800 text-gray-400 px-4 py-2 rounded-lg focus:outline-none hover:border-red-700"
-                        onClick={toggleAddModel}
-                    >
-                        Add Model
-                    </button>
-                    <button
-                        className="bg-gray-800 text-gray-400 px-4 py-2 rounded-lg focus:outline-none hover:border-red-700"
-                        onClick={toggleDropdown}
-                    >
-                        <FiFilter className="inline-block mr-2" />
-                        Filter
-                    </button>
-                    {isDropdownOpen && (
-                        <div className="absolute bg-gray-800 text-gray-400 rounded-lg py-2 mt-4 w-48">
+            <div className="mb-4  items-center justify-between">
+                <div className="flex items-center space-x-4 relative mb-2">
+                    {isSmallScreen ? (
+                        <button
+                            className="text-gray-400 hover:text-red-500 focus:outline-none"
+                            onClick={toggleDropdown}
+                        >
+                            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                            </svg>
+                        </button>
+                    ) : (
+                        <>
+                            <button
+                                className="bg-gray-800 text-gray-400 px-4 py-2 rounded-lg focus:outline-none hover:border-red-700"
+                                onClick={toggleDropdown}
+                            >
+                                <FiFilter className="inline-block mr-2" />
+                                Filter
+                            </button>
+                            <button
+                                className="bg-gray-800 text-gray-400 px-4 py-2 rounded-lg focus:outline-none hover:border-red-700"
+                                onClick={handleHallOfFame}
+                            >
+                                <FiAward className="inline-block mr-2" />
+                                Hall of Fame
+                            </button>
+                        </>
+                    )}
+                    {/* Dropdown for filter options on small screens */}
+                    {isDropdownOpen && isSmallScreen && (
+                        <div className="absolute bg-gray-800 text-gray-400 rounded-lg py-2 mt-4 w-48 z-50">
                             {uniqueCategories.map(category => (
                                 <label key={category} className="block px-4">
                                     <input
@@ -118,28 +119,28 @@ const Dashboard = () => {
                                     {category}
                                 </label>
                             ))}
+                            <button
+                                className="bg-gray-800 text-gray-400 px-4 py-2 rounded-lg focus:outline-none hover:border-red-700 mt-3"
+                                onClick={handleHallOfFame}
+                            >
+                                <FiAward className="inline-block mr-2" />
+                                Hall of Fame
+                            </button>
                         </div>
                     )}
 
-                    <button
-                        className="bg-gray-800 text-gray-400 px-4 py-2 rounded-lg focus:outline-none hover:border-red-700"
-                        onClick={handleHallOfFame}
-                    >
-                        <FiAward className="inline-block mr-2" />
-                        Hall of Fame
-                    </button>
+                </div>
+                <div className="flex items-center mb-2">
+                    <input
+                        type="text"
+                        placeholder="Search by title"
+                        className="bg-gray-800 text-gray-400 rounded-l-lg px-4 py-2 focus:outline-none"
+                        value={searchTerm}
+                        onChange={handleSearch}
+                    />
                 </div>
             </div>
             <ModelList models={models} />
-
-            {isAddModelOpen && (
-                <div className="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center">
-                    <div className="bg-gray-800 rounded-lg p-8 max-w-md">
-                        <h2 className="text-2xl font-bold mb-4">Add New Model</h2>
-                        <AddModelForm onSubmit={handleAddModel} onClose={() => setIsAddModelOpen(false)} />
-                    </div>
-                </div>
-            )}
         </div>
     );
 };
